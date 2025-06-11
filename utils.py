@@ -1,3 +1,20 @@
+import pandas as pd
+
+def clean_coordinates(df):
+    """Cleans and converts the X, Y columns to float, handling possible formatting errors."""
+    def limpiar_valor(val):
+        if isinstance(val, str):
+            val = val.replace('.', '').replace(',', '.')
+            try:
+                return float(val)
+            except ValueError:
+                return None
+        return val
+    df['X'] = df['X'].apply(limpiar_valor)
+    df['Y'] = df['Y'].apply(limpiar_valor)
+    df = df.dropna(subset=['X', 'Y'])
+    return df 
+
 def save_polygon_stats(gdf_points, gdf_polygon, output_path, utm_epsg=32615):
     """
     Calculate and save the number of vertices, perimeter (km), and area (ha) of a polygon.
